@@ -1,0 +1,7 @@
+# The workshop uses DuckDB 2.0 everywhere (Python package and CLI).
+duckdb==2.0.0
+huggingface_hub
+gradio
+gradio_client
+# DuckDB needs pytz to hand TIMESTAMPTZ values to Python (fetchall/df); .show() works without it.
+pytz

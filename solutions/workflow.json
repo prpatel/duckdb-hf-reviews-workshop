@@ -1,0 +1,359 @@
+{
+  "schema_version": "2",
+  "name": "Voice of the Customer",
+  "references": [
+    {
+      "id": "ref_trouble_min",
+      "label": "Min recent reviews",
+      "role": "reference",
+      "asset_type": "number",
+      "inputs": [
+        {
+          "id": "in",
+          "label": "Min recent reviews",
+          "type": "number"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "out",
+          "label": "Min recent reviews",
+          "type": "number"
+        }
+      ],
+      "data": {
+        "out": 20
+      }
+    },
+    {
+      "id": "ref_top_n",
+      "label": "Top N",
+      "role": "reference",
+      "asset_type": "number",
+      "inputs": [
+        {
+          "id": "in",
+          "label": "Top N",
+          "type": "number"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "out",
+          "label": "Top N",
+          "type": "number"
+        }
+      ],
+      "data": {
+        "out": 5
+      }
+    },
+    {
+      "id": "ref_report_min",
+      "label": "Min recent reviews (report)",
+      "role": "reference",
+      "asset_type": "number",
+      "inputs": [
+        {
+          "id": "in",
+          "label": "Min recent reviews (report)",
+          "type": "number"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "out",
+          "label": "Min recent reviews (report)",
+          "type": "number"
+        }
+      ],
+      "data": {
+        "out": 20
+      }
+    }
+  ],
+  "operators": [
+    {
+      "id": "op_trouble",
+      "label": "Products in trouble",
+      "role": "operator",
+      "kind": "fn",
+      "fn": "Products in trouble",
+      "inputs": [
+        {
+          "id": "in_min_recent_reviews",
+          "label": "min_recent_reviews",
+          "type": "number",
+          "required": true
+        },
+        {
+          "id": "in_top_n",
+          "label": "top_n",
+          "type": "number",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "id": "out_0",
+          "label": "output",
+          "type": "text"
+        }
+      ],
+      "data": {}
+    },
+    {
+      "id": "op_worst",
+      "label": "Worst product",
+      "role": "operator",
+      "kind": "fn",
+      "fn": "Worst product",
+      "inputs": [
+        {
+          "id": "in_min_recent_reviews",
+          "label": "min_recent_reviews",
+          "type": "number",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "id": "out_0",
+          "label": "output",
+          "type": "text"
+        }
+      ],
+      "data": {}
+    },
+    {
+      "id": "op_complaints",
+      "label": "Complaints",
+      "role": "operator",
+      "kind": "fn",
+      "fn": "Complaints",
+      "inputs": [
+        {
+          "id": "in_asin",
+          "label": "asin",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "in_limit",
+          "label": "limit",
+          "type": "number",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "id": "out_0",
+          "label": "output",
+          "type": "text"
+        }
+      ],
+      "data": {
+        "in_limit": 40
+      }
+    },
+    {
+      "id": "op_themes",
+      "label": "Complaint themes",
+      "role": "operator",
+      "kind": "fn",
+      "fn": "Complaint themes",
+      "inputs": [
+        {
+          "id": "in_complaints",
+          "label": "complaints",
+          "type": "text",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "id": "out_0",
+          "label": "output",
+          "type": "text"
+        }
+      ],
+      "data": {}
+    },
+    {
+      "id": "op_save",
+      "label": "Save report",
+      "role": "operator",
+      "kind": "fn",
+      "fn": "Save report",
+      "inputs": [
+        {
+          "id": "in_asin",
+          "label": "asin",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "in_themes",
+          "label": "themes",
+          "type": "text",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "id": "out_0",
+          "label": "output",
+          "type": "text"
+        }
+      ],
+      "data": {}
+    }
+  ],
+  "subjects": [
+    {
+      "id": "sub_trouble",
+      "label": "Products in trouble",
+      "role": "subject",
+      "asset_type": "text",
+      "inputs": [
+        {
+          "id": "in",
+          "label": "Products in trouble",
+          "type": "text"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "out",
+          "label": "Products in trouble",
+          "type": "text"
+        }
+      ],
+      "data": {}
+    },
+    {
+      "id": "sub_themes",
+      "label": "Complaint report",
+      "role": "subject",
+      "asset_type": "text",
+      "inputs": [
+        {
+          "id": "in",
+          "label": "Complaint report",
+          "type": "text"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "out",
+          "label": "Complaint report",
+          "type": "text"
+        }
+      ],
+      "data": {}
+    },
+    {
+      "id": "sub_path",
+      "label": "Report file",
+      "role": "subject",
+      "asset_type": "text",
+      "inputs": [
+        {
+          "id": "in",
+          "label": "Report file",
+          "type": "text"
+        }
+      ],
+      "outputs": [
+        {
+          "id": "out",
+          "label": "Report file",
+          "type": "text"
+        }
+      ],
+      "data": {}
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "from_node_id": "ref_trouble_min",
+      "from_port_id": "out",
+      "to_node_id": "op_trouble",
+      "to_port_id": "in_min_recent_reviews",
+      "type": "number"
+    },
+    {
+      "id": "e2",
+      "from_node_id": "ref_top_n",
+      "from_port_id": "out",
+      "to_node_id": "op_trouble",
+      "to_port_id": "in_top_n",
+      "type": "number"
+    },
+    {
+      "id": "e3",
+      "from_node_id": "op_trouble",
+      "from_port_id": "out_0",
+      "to_node_id": "sub_trouble",
+      "to_port_id": "in",
+      "type": "text"
+    },
+    {
+      "id": "e4",
+      "from_node_id": "ref_report_min",
+      "from_port_id": "out",
+      "to_node_id": "op_worst",
+      "to_port_id": "in_min_recent_reviews",
+      "type": "number"
+    },
+    {
+      "id": "e5",
+      "from_node_id": "op_worst",
+      "from_port_id": "out_0",
+      "to_node_id": "op_complaints",
+      "to_port_id": "in_asin",
+      "type": "text"
+    },
+    {
+      "id": "e6",
+      "from_node_id": "op_complaints",
+      "from_port_id": "out_0",
+      "to_node_id": "op_themes",
+      "to_port_id": "in_complaints",
+      "type": "text"
+    },
+    {
+      "id": "e7",
+      "from_node_id": "op_themes",
+      "from_port_id": "out_0",
+      "to_node_id": "op_save",
+      "to_port_id": "in_themes",
+      "type": "text"
+    },
+    {
+      "id": "e8",
+      "from_node_id": "op_worst",
+      "from_port_id": "out_0",
+      "to_node_id": "op_save",
+      "to_port_id": "in_asin",
+      "type": "text"
+    },
+    {
+      "id": "e9",
+      "from_node_id": "op_themes",
+      "from_port_id": "out_0",
+      "to_node_id": "sub_themes",
+      "to_port_id": "in",
+      "type": "text"
+    },
+    {
+      "id": "e10",
+      "from_node_id": "op_save",
+      "from_port_id": "out_0",
+      "to_node_id": "sub_path",
+      "to_port_id": "in",
+      "type": "text"
+    }
+  ]
+}

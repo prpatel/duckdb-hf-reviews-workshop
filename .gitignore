@@ -1,0 +1,25 @@
+# Python
+.venv/
+__pycache__/
+
+# Data: everything here is downloaded or generated
+clean/
+raw/
+raw-sample/
+full-raw/
+sample-clean/
+reports/
+*.parquet
+*.jsonl
+
+# Your own canvas wiring (Module 4). The finished one is in solutions/.
+/workflow.json
+
+# Instructor-only material and local agent notes (not published)
+instructor/
+CLAUDE.md
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
