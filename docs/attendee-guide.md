@@ -235,6 +235,8 @@ cp solutions/workflow.json workflow.json      # then restart python app.py
 
    On Windows PowerShell, use `$env:HF_TOKEN = hf auth token` for the first line, and put the second command on one line without the `\`. The app reads `/data` by default, so it sees the full tables from Module 3.
 
+   **Free account?** If it says you need PRO to create a Gradio Space, add `--flavor cpu-upgrade --sleep-time 900` to the `hf repos create` command. Free accounts can't run Gradio Spaces on the free CPU hardware, but they can pay for CPU Upgrade from their credits: $0.03 an hour, and the Space sleeps after 15 idle minutes.
+
 3. **Upload the app:**
 
    ```bash
@@ -283,6 +285,7 @@ cp solutions/workflow.json workflow.json      # then restart python app.py
 | `client.view_api()` lists no useful endpoints | Your pipelines need output nodes (Module 4), or copy `solutions/workflow.json`. |
 | The Space can't find its data | Run `hf spaces volumes list <you>/voc-workshop`: the bucket must be mounted at exactly `/data`. And `hf buckets list <you>/voc-workshop/clean` must show the two Parquet files. |
 | **Save report** fails in the Space | The bucket is mounted read-only. Mount it again read-write: `hf spaces volumes set <you>/voc-workshop -v hf://buckets/<you>/voc-workshop:/data`, then restart the Space. |
+| `hf repos create` says you need PRO for a Gradio Space | Add `--flavor cpu-upgrade --sleep-time 900` to the command. It runs on your credits at $0.03 an hour. If the Space already exists, run `hf spaces settings <you>/voc-workshop --hardware cpu-upgrade` instead. |
 | `hf repos create` says the Space already exists | Settings on the command aren't applied to an existing Space. Set them separately: `hf spaces volumes set <you>/voc-workshop -v hf://buckets/<you>/voc-workshop:/data`, `hf spaces variables add <you>/voc-workshop -e VOC_MODEL=Qwen/Qwen3-Next-80B-A3B-Instruct`, and `hf spaces secrets add <you>/voc-workshop -s HF_TOKEN` (after `export HF_TOKEN=$(hf auth token)`). Then upload as in step 3. |
 | **Complaint themes** fails | In the Space, check `HF_TOKEN` is set as a secret: `hf spaces secrets list <you>/voc-workshop`. "returned no text" means `VOC_MODEL` names a reasoning model; use `Qwen/Qwen3-Next-80B-A3B-Instruct`. "No complaints to summarise" means Complaints got no product ID. |
 
@@ -292,7 +295,7 @@ Stuck on something else? Put your hand up; helpers will be walking around.
 
 ## After the workshop
 
-Your bucket and Space stay in your Hugging Face account, so you can keep using them. Both are private; to share your Space, run `hf repos settings <you>/voc-workshop --type space --public` (anyone can then run it on your credits). Delete them from your account settings when you're done. The first `hf jobs uv run` also created a bucket called `<you>/jobs-artifacts` to hold the uploaded script; you can delete that too.
+Your bucket and Space stay in your Hugging Face account, so you can keep using them. Both are private; to share your Space, run `hf repos settings <you>/voc-workshop --type space --public` (anyone can then run it on your credits). Delete them from your account settings when you're done. If your Space runs on CPU Upgrade, it costs $0.03 for each hour it's awake, so delete it or pause it with `hf spaces pause <you>/voc-workshop`. The first `hf jobs uv run` also created a bucket called `<you>/jobs-artifacts` to hold the uploaded script; you can delete that too.
 
 Ways to take it further:
 
