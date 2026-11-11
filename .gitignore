@@ -15,7 +15,7 @@ reports/
 # Your own canvas wiring (Module 4). The finished one is in solutions/.
 /workflow.json
 
-# Instructor-only material and local agent notes (not published)
+# Local notes, not published
 instructor/
 CLAUDE.md
 

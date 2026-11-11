@@ -37,7 +37,7 @@ Please do these at home; the venue Wi-Fi is shared by the whole room. Setup take
    pip install -r requirements.txt
    ```
 
-8. **Log in from the terminal** and paste your token when asked:
+8. **Log in from the terminal**, in your browser when it asks, or by pasting your write token:
 
    ```bash
    hf auth login
@@ -121,7 +121,7 @@ Turn the sample's raw JSON lines into two Parquet tables:
 python scripts/ingest.py --src raw-sample
 ```
 
-This writes `clean/reviews.parquet` and `clean/products.parquet`, then prints the number of reviews and products, the first and last review dates, and the share of verified purchases. You should see **50,430 reviews and 195 products**. It takes seconds, so rerun it as often as you like. Try changing a column in `scripts/ingest.py` and running it again; that quick loop is why we start with a sample.
+This writes `clean/reviews.parquet` and `clean/products.parquet`, then prints the number of reviews and products, the first and last review dates, and the share of verified purchases. You should see **50,430 reviews, 195 products and 96.7% verified**. It takes seconds, so rerun it as often as you like. Try changing a column in `scripts/ingest.py` and running it again; that quick loop is why we start with a sample.
 
 ### Module 2: Find the trouble
 
@@ -144,6 +144,8 @@ Or open `duckdb` and type `.read sql/analysis.sql` to stay in the shell and keep
 SET VARIABLE asin = 'B09MVV717N';
 -- ... WHERE parent_asin = getvariable('asin') ...
 ```
+
+On the sample, 2c should lead with `B01FF4ASTS`, a dryer duct connector, at **−1.97**.
 
 The knobs to play with are the two thresholds in 2c: a product needs at least 20 recent and 50 earlier verified reviews to be ranked. Change them and see how the list moves. If you finish early, break the ranking down by `store`, or compare against the same months a year earlier to rule out seasonal dips.
 
@@ -213,10 +215,34 @@ cp solutions/workflow.json workflow.json      # then restart python app.py
 
 ### Module 5: Ship it
 
-1. **Deploy.** From the workshop folder, with `app.py`, `workflow.json` and `requirements.txt` in it, run `gradio deploy` and name the Space `voc-workshop`.
-2. **Mount your bucket.** In the Space's **Settings**, under **Storage Buckets**, add `voc-workshop` with mount path `/data` and **read-write** access. The app reads `/data` by default, so it now sees the full tables from Module 3.
-3. **Add the settings.** Under **Variables and secrets**, add your token as the secret `HF_TOKEN` and `Qwen/Qwen3-Next-80B-A3B-Instruct` as the variable `VOC_MODEL`. Restart the Space.
-4. **Run it on the full data.** The first query takes about 15 seconds while the bucket warms up; after that it's fast. Then check the report landed in your bucket:
+1. **Put the three files in their own folder.** Only these get uploaded, not your virtual environment or the data:
+
+   ```bash
+   mkdir space
+   cp app.py workflow.json requirements.txt space/
+   ```
+
+   No `workflow.json` of your own? Use `cp solutions/workflow.json space/workflow.json` instead. On Windows PowerShell: `mkdir space; copy app.py, workflow.json, requirements.txt space\`.
+
+2. **Create the Space** with your bucket mounted at `/data` (read-write), your token as the secret `HF_TOKEN`, and the model as the variable `VOC_MODEL`, all in one command:
+
+   ```bash
+   export HF_TOKEN=$(hf auth token)
+   hf repos create <you>/voc-workshop --type space --sdk gradio --private \
+     -v hf://buckets/<you>/voc-workshop:/data \
+     --env VOC_MODEL=Qwen/Qwen3-Next-80B-A3B-Instruct --secrets HF_TOKEN
+   ```
+
+   On Windows PowerShell, use `$env:HF_TOKEN = hf auth token` for the first line, and put the second command on one line without the `\`. The app reads `/data` by default, so it sees the full tables from Module 3.
+
+3. **Upload the app:**
+
+   ```bash
+   hf upload <you>/voc-workshop space . --type space
+   hf spaces wait <you>/voc-workshop        # about a minute while it builds
+   ```
+
+4. **Run it on the full data** at `https://huggingface.co/spaces/<you>/voc-workshop`. The first query takes about 15 seconds while the bucket warms up; after that it's fast. Then check the report landed in your bucket:
 
    ```bash
    hf buckets list <you>/voc-workshop/reports
@@ -255,9 +281,10 @@ cp solutions/workflow.json workflow.json      # then restart python app.py
 | The `hf cp` copy fails | You may have created the bucket in a different region. Delete it, create it again without `--region`, and copy again. |
 | You can't connect nodes on the canvas | You opened the read-only address. Use the write-access link Gradio printed. |
 | `client.view_api()` lists no useful endpoints | Your pipelines need output nodes (Module 4), or copy `solutions/workflow.json`. |
-| The Space can't find its data | In the Space's Settings, check the bucket is mounted at exactly `/data`, and that `hf buckets list <you>/voc-workshop/clean` shows the two Parquet files. |
-| **Save report** fails in the Space | The bucket is mounted read-only. Change the mount to read-write. |
-| **Complaint themes** fails | Check that `VOC_MODEL` is set to the model above and, in the Space, that `HF_TOKEN` is added as a secret. "returned no text" means you picked a reasoning model; use the one above. |
+| The Space can't find its data | Run `hf spaces volumes list <you>/voc-workshop`: the bucket must be mounted at exactly `/data`. And `hf buckets list <you>/voc-workshop/clean` must show the two Parquet files. |
+| **Save report** fails in the Space | The bucket is mounted read-only. Mount it again read-write: `hf spaces volumes set <you>/voc-workshop -v hf://buckets/<you>/voc-workshop:/data`, then restart the Space. |
+| `hf repos create` says the Space already exists | Settings on the command aren't applied to an existing Space. Set them separately: `hf spaces volumes set <you>/voc-workshop -v hf://buckets/<you>/voc-workshop:/data`, `hf spaces variables add <you>/voc-workshop -e VOC_MODEL=Qwen/Qwen3-Next-80B-A3B-Instruct`, and `hf spaces secrets add <you>/voc-workshop -s HF_TOKEN` (after `export HF_TOKEN=$(hf auth token)`). Then upload as in step 3. |
+| **Complaint themes** fails | In the Space, check `HF_TOKEN` is set as a secret: `hf spaces secrets list <you>/voc-workshop`. "returned no text" means `VOC_MODEL` names a reasoning model; use `Qwen/Qwen3-Next-80B-A3B-Instruct`. "No complaints to summarise" means Complaints got no product ID. |
 
 Stuck on something else? Put your hand up; helpers will be walking around.
 
@@ -265,7 +292,7 @@ Stuck on something else? Put your hand up; helpers will be walking around.
 
 ## After the workshop
 
-Your bucket and Space stay in your Hugging Face account, so you can keep using them. Delete them from your account settings when you're done. The first `hf jobs uv run` also created a bucket called `<you>/jobs-artifacts` to hold the uploaded script; you can delete that too.
+Your bucket and Space stay in your Hugging Face account, so you can keep using them. Both are private; to share your Space, run `hf repos settings <you>/voc-workshop --type space --public` (anyone can then run it on your credits). Delete them from your account settings when you're done. The first `hf jobs uv run` also created a bucket called `<you>/jobs-artifacts` to hold the uploaded script; you can delete that too.
 
 Ways to take it further:
 

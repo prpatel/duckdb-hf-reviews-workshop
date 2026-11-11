@@ -1,7 +1,8 @@
+# Tested together on 2026-11-10. gr.Workflow is in beta, so Gradio is pinned exactly.
 # The workshop uses DuckDB 2.0 everywhere (Python package and CLI).
 duckdb==2.0.0
-huggingface_hub
-gradio
-gradio_client
+gradio==6.31.0
+gradio_client==2.7.2
+huggingface_hub==2.4.0
 # DuckDB needs pytz to hand TIMESTAMPTZ values to Python (fetchall/df); .show() works without it.
 pytz

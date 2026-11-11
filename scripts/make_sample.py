@@ -1,4 +1,4 @@
-"""Instructor prep: build the 24 MB local-development sample attendees download.
+"""Build the 24 MB local-development sample (prpatel/voc-appliances-sample) from the full data.
 
 A random sample of reviews would break the workshop: most products would have only
 a handful of reviews, so the decline ranking (which needs >= 20 recent and >= 50
@@ -10,8 +10,6 @@ WHOLE products:
 
 It copies their raw JSONL lines byte for byte, in the dataset's raw/ layout, so
 scripts/ingest.py runs on the sample exactly as it does on the full data.
-
-Tell attendees the sample was built this way; it's a good discussion of dev samples.
 
 Usage (needs a full clean/ from scripts/ingest.py and local copies of the raw files):
     hf download McAuley-Lab/Amazon-Reviews-2023 raw/review_categories/Appliances.jsonl \\

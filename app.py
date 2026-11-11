@@ -7,7 +7,7 @@ import gradio as gr
 from huggingface_hub import InferenceClient
 
 DATA = os.environ.get("VOC_DATA", "/data")          # bucket mount path in the Space
-LLM = os.environ.get("VOC_MODEL", "<an instruct model on Inference Providers>")
+LLM = os.environ.get("VOC_MODEL", "Qwen/Qwen3-Next-80B-A3B-Instruct")
 
 DECLINE_SQL = """
 WITH bounds AS (SELECT max(reviewed_at) AS as_of FROM reviews),
@@ -72,6 +72,8 @@ def complaints(asin: str, limit: int = 40) -> str:
 
 def complaint_themes(complaints: str) -> str:
     """Group complaints into themes with an LLM on Inference Providers."""
+    if not complaints.strip():
+        raise gr.Error("No complaints to summarise. Is there a product ID in Complaints?")
     prompt = (
         "You are a product quality analyst. Below are recent 1-2 star reviews of one appliance.\n"
         "Start with a 'Safety' section. List a hazard (fire, smoke, electric shock, water damage, "

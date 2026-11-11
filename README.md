@@ -35,7 +35,7 @@ duckdb < sql/analysis.sql                    # Module 2: find the declining prod
 | `solutions/workflow.json` | A finished canvas, wired, with two API endpoints | 4, 5 |
 | `scripts/make_sample.py` | How the 24 MB sample was built from the full data | |
 | `tests/` | Synthetic-data tests for the SQL and the sample flow | |
-| `requirements.txt` | Python packages; DuckDB is pinned to 2.0.0 | |
+| `requirements.txt` | Python packages, pinned to the tested versions: DuckDB 2.0.0, Gradio 6.31.0 | |
 
 ## Data
 
@@ -43,3 +43,7 @@ The **Appliances** category of [Amazon Reviews 2023](https://huggingface.co/data
 
 - [`prpatel/voc-appliances-sample`](https://huggingface.co/datasets/prpatel/voc-appliances-sample): the 24 MB sample, 50,430 reviews of 195 products, in the original raw layout.
 - [`prpatel/voc-appliances-clean`](https://huggingface.co/datasets/prpatel/voc-appliances-clean): the full category as two Parquet tables, the fallback if your Job doesn't run.
+
+## License
+
+The code in this repository is under the [MIT License](LICENSE). The review data is not part of this repository and is not covered by it: it comes from the McAuley Lab's Amazon Reviews 2023 dataset, under that dataset's terms.
