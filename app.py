@@ -52,9 +52,11 @@ def _con():
 def products_in_trouble(min_recent_reviews: int = 20, top_n: int = 5) -> str:
     """Products whose average rating fell most in the last six months, as a table."""
     rows = _con().execute(DECLINE_SQL, {"min_recent": min_recent_reviews, "top_n": top_n}).fetchall()
-    lines = ["| ASIN | Product | Store | Recent reviews | Before | Recent | Change |",
-             "| --- | --- | --- | --- | --- | --- | --- |"]
-    lines += ["| " + " | ".join(str(v) for v in r) + " |" for r in rows]
+    lines = ["| ASIN | Product | Store | Recent n | Before | Recent | Change |",
+             "| --- | --- | --- | ---: | ---: | ---: | ---: |"]
+    for asin, product, store, n, before, recent, change in rows:
+        name = product if len(product or "") <= 40 else product[:39] + "…"   # titles run to 200 chars
+        lines.append(f"| {asin} | {name} | {store} | {n} | {before} | {recent} | {change} |")
     return "\n".join(lines)
 
 

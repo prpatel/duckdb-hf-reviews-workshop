@@ -203,7 +203,7 @@ The canvas has five nodes, one per Python function in `app.py`:
 4. **Complaint themes** sends those reviews to an LLM, which lists any real safety issue first and then groups the complaints into themes with counts and quotes.
 5. **Save report** writes the themes to a Markdown file in `reports/`.
 
-Connect **Worst product → Complaints → Complaint themes → Save report**, and also connect **Worst product** to the product-ID input on **Save report**. Type values into the number inputs (20 for the review threshold, 5 for top N, 40 for the complaint limit). Run the nodes one at a time and read each output before moving on.
+Connect **Worst product → Complaints → Complaint themes → Save report**, and also connect **Worst product** to the product-ID input on **Save report**. Type values into the number inputs (20 for the review threshold, 5 for top N, 40 for the complaint limit). Run the nodes one at a time and read each output before moving on. Drag a node's bottom-right corner to make it bigger; the ranking table needs the room.
 
 **To make it an API** (you'll need this in Module 5), each pipeline needs an **output** node at its end, and **number input** nodes for the values a caller should be able to pass. For example, two number inputs feeding **Products in trouble**, and an output node labelled "Products in trouble" after it.
 

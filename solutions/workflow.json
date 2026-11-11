@@ -214,19 +214,19 @@
       "id": "sub_trouble",
       "label": "Products in trouble",
       "role": "subject",
-      "asset_type": "text",
+      "asset_type": "markdown",
       "inputs": [
         {
           "id": "in",
           "label": "Products in trouble",
-          "type": "text"
+          "type": "markdown"
         }
       ],
       "outputs": [
         {
           "id": "out",
           "label": "Products in trouble",
-          "type": "text"
+          "type": "markdown"
         }
       ],
       "data": {}
@@ -235,19 +235,19 @@
       "id": "sub_themes",
       "label": "Complaint report",
       "role": "subject",
-      "asset_type": "text",
+      "asset_type": "markdown",
       "inputs": [
         {
           "id": "in",
           "label": "Complaint report",
-          "type": "text"
+          "type": "markdown"
         }
       ],
       "outputs": [
         {
           "id": "out",
           "label": "Complaint report",
-          "type": "text"
+          "type": "markdown"
         }
       ],
       "data": {}
